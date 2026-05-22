@@ -102,7 +102,8 @@ This platform does all five.
 ## Screenshots
 
 ### Landing Page
-![Landing Page](docs/screenshots/landing.png)
+![Landing Page](<img width="1920" height="960" alt="front" src="https://github.com/user-attachments/assets/5f447dd7-9c4b-4c79-9db8-8f82d072b925" />
+)
 
 ### Session Dashboard
 ![Session Dashboard](docs/screenshots/session.png)
