@@ -103,7 +103,7 @@ This platform does all five.
 
 ### Landing Page
 
-![Landing Page](front.png)
+![Landing Page](front.jpg)
 
 > **Hero Section Highlights**
 > - **AI-Powered Resume Optimization** positioning
