@@ -102,8 +102,15 @@ This platform does all five.
 ## Screenshots
 
 ### Landing Page
-![Landing Page](<img width="1920" height="960" alt="front" src="https://github.com/user-attachments/assets/5f447dd7-9c4b-4c79-9db8-8f82d072b925" />
-)
+
+![Landing Page](docs/screenshots/front.png)
+
+> **Hero Section Highlights**
+> - **AI-Powered Resume Optimization** positioning
+> - Clear value prop: *“Beat the ATS. Land the interview.”*
+> - 3-step flow: Upload Resume → Paste Job Description → Generate Resume
+> - Zero-friction CTA: *No sign-up required*
+> - Visual emphasis on multi-agent intelligence and ATS scoring
 
 ### Session Dashboard
 ![Session Dashboard](docs/screenshots/session.png)
