@@ -1,0 +1,19 @@
+Software Engineer - Acme Corp
+
+We are looking for a Software Engineer with 3+ years of Python experience.
+Must have experience with FastAPI and PostgreSQL.
+
+Requirements:
+- 3+ years Python development
+- 2+ years FastAPI
+- Experience with REST APIs and microservices
+- Good communication skills
+- Bachelor's degree in Computer Science or related field
+
+Nice to have:
+- Docker and Kubernetes
+- AWS experience
+- CI/CD pipeline experience
+
+Remote position, full-time.
+Salary: $120,000 - $160,000

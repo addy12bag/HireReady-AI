@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+{% block title %}Session — Resume AI{% endblock %}
+
+{% block nav_extra %}
+<a href="/" class="text-sm text-gray-500 dark:text-gray-400 hover:text-brand-600 dark:hover:text-neon-cyan transition-colors duration-200 flex items-center gap-1">
+  <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+  New Session
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+  <!-- Progress Steps -->
+  <div class="flex items-center justify-center gap-3 mb-12">
+    <div class="flex items-center gap-3">
+      <div class="step-dot {% if has_resume %}completed{% else %}active{% endif %}">
+        {% if has_resume %}
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+        {% else %}1{% endif %}
+      </div>
+      <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Upload</span>
+    </div>
+    <div class="step-connector {% if has_resume %}completed{% endif %}"></div>
+    <div class="flex items-center gap-3">
+      <div class="step-dot {% if has_ats %}completed{% elif has_resume %}active{% else %}pending{% endif %}">
+        {% if has_ats %}
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+        {% else %}2{% endif %}
+      </div>
+      <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Score</span>
+    </div>
+    <div class="step-connector {% if has_ats %}completed{% endif %}"></div>
+    <div class="flex items-center gap-3">
+      <div class="step-dot {% if generated_resumes %}completed{% else %}pending{% endif %}">
+        {% if generated_resumes %}
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+        {% else %}3{% endif %}
+      </div>
+      <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Generate</span>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+    <!-- Left: Upload Resume -->
+    <div class="card-glass rounded-2xl p-6 sm:p-8">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-brand-500/10 to-cyan-500/10 dark:from-brand-500/20 dark:to-cyan-500/20 flex items-center justify-center border border-brand-200/30 dark:border-brand-700/20">
+          <svg class="w-5 h-5 text-brand-600 dark:text-neon-cyan" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100">Upload Resume</h2>
+          <p class="text-sm text-gray-500 dark:text-gray-400">PDF or DOCX format</p>
+        </div>
+      </div>
+
+      {% if has_resume %}
+        <div id="upload-result" class="flex items-center gap-3 p-4 bg-green-50/80 dark:bg-green-950/30 border border-green-200/50 dark:border-green-800/30 rounded-xl backdrop-blur-sm">
+          <div class="w-8 h-8 rounded-lg bg-green-100 dark:bg-green-900/40 flex items-center justify-center">
+            <svg class="w-4 h-4 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <span class="text-sm font-medium text-green-800 dark:text-green-300">Resume uploaded and parsed</span>
+        </div>
+      {% else %}
+        <form
+          hx-post="/session/{{ session.id }}/upload"
+          hx-encoding="multipart/form-data"
+          hx-target="#upload-result"
+          hx-swap="innerHTML"
+        >
+          <label class="dropzone-futuristic flex flex-col items-center justify-center w-full h-44">
+            <div class="w-14 h-14 rounded-2xl bg-gray-100 dark:bg-surface-800 flex items-center justify-center mb-3 border border-gray-200/50 dark:border-gray-700/30">
+              <svg class="w-7 h-7 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"/>
+              </svg>
+            </div>
+            <span class="text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold text-brand-600 dark:text-neon-cyan">Click to upload</span> or drag and drop</span>
+            <span class="text-xs text-gray-400 dark:text-gray-500 mt-1.5">PDF or DOCX</span>
+            <input type="file" name="file" accept=".pdf,.docx" class="hidden" onchange="this.form.requestSubmit()">
+          </label>
+        </form>
+        <div id="upload-result" class="mt-4"></div>
+
+        <!-- Loading spinner -->
+        <div data-loading class="mt-4 items-center justify-center gap-3 text-sm text-gray-500 dark:text-gray-400">
+          <div class="spinner-futuristic"></div>
+          <span>Parsing resume...</span>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Right: Job Description -->
+    <div class="card-glass rounded-2xl p-6 sm:p-8">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 dark:from-purple-500/20 dark:to-pink-500/20 flex items-center justify-center border border-purple-200/30 dark:border-purple-700/20">
+          <svg class="w-5 h-5 text-purple-600 dark:text-neon-purple" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100">Job Description</h2>
+          <p class="text-sm text-gray-500 dark:text-gray-400">Paste the target job posting</p>
+        </div>
+      </div>
+
+      {% if has_ats %}
+        <div class="flex items-center gap-3 p-4 bg-green-50/80 dark:bg-green-950/30 border border-green-200/50 dark:border-green-800/30 rounded-xl backdrop-blur-sm">
+          <div class="w-8 h-8 rounded-lg bg-green-100 dark:bg-green-900/40 flex items-center justify-center">
+            <svg class="w-4 h-4 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <span class="text-sm font-medium text-green-800 dark:text-green-300">Scored — <a href="/session/{{ session.id }}/results" class="underline hover:text-green-900 dark:hover:text-green-200 transition-colors">View results</a></span>
+        </div>
+      {% else %}
+        <form
+          hx-post="/session/{{ session.id }}/score"
+          hx-target="#score-error"
+          hx-swap="innerHTML"
+          hx-indicator="#score-spinner"
+          class="flex flex-col gap-4"
+        >
+          <textarea
+            name="job_description"
+            rows="10"
+            placeholder="Paste the full job description here..."
+            required
+            class="input-futuristic resize-none"
+          ></textarea>
+          <button
+            type="submit"
+            {% if not has_resume %}disabled title="Upload a resume first"{% endif %}
+            class="btn-futuristic justify-center w-full
+            {% if not has_resume %}opacity-40 cursor-not-allowed pointer-events-none{% endif %}"
+          >
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+            </svg>
+            <span>Analyze &amp; Score</span>
+          </button>
+        </form>
+
+        <div id="score-error" class="mt-4"></div>
+
+        <!-- Loading spinner for scoring -->
+        <div id="score-spinner" class="htmx-indicator mt-4 flex items-center justify-center gap-3 text-sm text-gray-500 dark:text-gray-400">
+          <div class="spinner-futuristic"></div>
+          <span>Analyzing resume — this may take 15-30 seconds...</span>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Quick actions if already scored -->
+  {% if has_ats and ats_report %}
+  <div class="mt-8 card-glass rounded-2xl p-6 sm:p-8">
+    <div class="flex items-center justify-between mb-5">
+      <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-100">Quick Actions</h2>
+      <a href="/session/{{ session.id }}/results" class="text-sm text-brand-600 dark:text-neon-cyan hover:text-brand-700 dark:hover:text-neon-purple font-medium transition-colors flex items-center gap-1">
+        View full report
+        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+      </a>
+    </div>
+    <div class="flex flex-wrap gap-3">
+      <a href="/session/{{ session.id }}/results" class="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-brand-50/80 dark:bg-brand-900/20 border border-brand-200/30 dark:border-brand-700/20 text-brand-700 dark:text-neon-cyan text-sm font-medium hover:bg-brand-100 dark:hover:bg-brand-900/30 transition-all duration-200">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2z"/></svg>
+        ATS Score: {{ ats_report.overall_score|round(0)|int }}% ({{ ats_report.grade }})
+      </a>
+      <a href="/session/{{ session.id }}/chat" class="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-gray-100/80 dark:bg-surface-800/60 border border-gray-200/30 dark:border-gray-700/20 text-gray-700 dark:text-gray-300 text-sm font-medium hover:bg-gray-200 dark:hover:bg-surface-700/60 transition-all duration-200">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+        Chat with AI
+      </a>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

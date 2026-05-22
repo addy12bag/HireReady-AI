@@ -1,0 +1,22 @@
+Jane Doe
+jane@example.com | 555-1234 | linkedin.com/in/janedoe | github.com/janedoe
+
+SUMMARY
+Experienced software engineer with 5 years of experience building scalable web applications.
+
+EXPERIENCE
+Senior Engineer, Acme Corp (Jan 2020 - Present)
+- Built scalable APIs serving 10M requests/day using Python and FastAPI
+- Led team of 4 engineers on microservices migration
+- Reduced deployment time by 60% through CI/CD automation
+
+Junior Developer, StartupXYZ (Jun 2018 - Dec 2019)
+- Developed REST APIs using Flask and PostgreSQL
+- Implemented automated testing pipeline
+
+EDUCATION
+BS Computer Science, MIT (2016 - 2020)
+GPA: 3.8
+
+SKILLS
+Python, FastAPI, PostgreSQL, Docker, Kubernetes, AWS, Git, REST API

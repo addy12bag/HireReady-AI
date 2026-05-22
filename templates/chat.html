@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% block title %}Chat — Resume AI{% endblock %}
+
+{% block nav_extra %}
+<a href="/session/{{ session_id }}/results" class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors">&larr; Results</a>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-col" style="height: calc(100vh - 8rem);">
+
+  <div class="mb-6">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-50">AI Resume Assistant</h1>
+    <p class="text-gray-500 dark:text-gray-400 mt-1">Ask questions about your resume, score, or how to improve it</p>
+  </div>
+
+  <!-- Chat Messages -->
+  <div id="chat-messages" class="flex-1 overflow-y-auto space-y-4 mb-6 pr-2" role="log" aria-live="polite" aria-label="Chat messages">
+    <!-- Welcome message -->
+    <div class="flex gap-3 fade-in">
+      <div class="flex-shrink-0 w-8 h-8 rounded-full bg-brand-100 dark:bg-brand-900/50 flex items-center justify-center">
+        <svg class="w-4 h-4 text-brand-600 dark:text-brand-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+        </svg>
+      </div>
+      <div class="bg-white dark:bg-surface-800 border border-gray-200 dark:border-gray-700 rounded-2xl rounded-tl-md px-4 py-3 max-w-[85%]">
+        <p class="text-sm text-gray-700 dark:text-gray-200">Hi! I can help you understand your ATS score and improve your resume. Try asking:</p>
+        <ul class="mt-2 text-sm text-gray-500 dark:text-gray-400 space-y-1">
+          <li>&bull; "What keywords am I missing?"</li>
+          <li>&bull; "How can I improve my experience section?"</li>
+          <li>&bull; "Why is my semantic similarity low?"</li>
+        </ul>
+      </div>
+    </div>
+
+    {% for msg in messages %}
+    <div class="flex gap-3 fade-in {% if msg.role == 'user' %}flex-row-reverse{% endif %}">
+      {% if msg.role == 'assistant' %}
+      <div class="flex-shrink-0 w-8 h-8 rounded-full bg-brand-100 dark:bg-brand-900/50 flex items-center justify-center">
+        <svg class="w-4 h-4 text-brand-600 dark:text-brand-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+        </svg>
+      </div>
+      {% endif %}
+      <div class="px-4 py-3 max-w-[85%] rounded-2xl text-sm
+        {% if msg.role == 'user' %}
+          bg-brand-600 text-white rounded-tr-md
+        {% else %}
+          bg-white dark:bg-surface-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 rounded-tl-md
+        {% endif %}">
+        <p class="whitespace-pre-wrap">{{ msg.content }}</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Thinking indicator -->
+  <div id="chat-thinking" class="htmx-indicator flex gap-3 mb-4">
+    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-brand-100 dark:bg-brand-900/50 flex items-center justify-center">
+      <svg class="w-4 h-4 text-brand-600 dark:text-brand-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+      </svg>
+    </div>
+    <div class="bg-white dark:bg-surface-800 border border-gray-200 dark:border-gray-700 rounded-2xl rounded-tl-md px-4 py-3">
+      <div class="flex gap-1.5">
+        <span class="w-2 h-2 rounded-full bg-gray-400 dark:bg-gray-500 animate-bounce" style="animation-delay: 0ms;"></span>
+        <span class="w-2 h-2 rounded-full bg-gray-400 dark:bg-gray-500 animate-bounce" style="animation-delay: 150ms;"></span>
+        <span class="w-2 h-2 rounded-full bg-gray-400 dark:bg-gray-500 animate-bounce" style="animation-delay: 300ms;"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Input -->
+  <div class="bg-white dark:bg-surface-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-sm p-3 transition-colors duration-300">
+    <form
+      hx-post="/session/{{ session_id }}/chat"
+      hx-target="#chat-messages"
+      hx-swap="beforeend"
+      hx-indicator="#chat-thinking"
+      hx-on::before-request="addUserMessage(this);"
+      hx-on::after-request="this.reset(); document.getElementById('chat-input').style.height='auto'; document.getElementById('chat-thinking').style.display='none'; document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight;"
+      class="flex gap-3"
+    >
+      <textarea
+        id="chat-input"
+        name="message"
+        rows="1"
+        placeholder="Ask about your resume..."
+        required
+        class="flex-1 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 bg-transparent resize-none focus:outline-none"
+        onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault(); this.form.requestSubmit();}"
+        oninput="this.style.height='auto'; this.style.height=Math.min(this.scrollHeight,120)+'px';"
+        style="max-height: 120px;"
+      ></textarea>
+      <button type="submit" aria-label="Send message" class="flex-shrink-0 w-10 h-10 rounded-xl bg-brand-600 text-white flex items-center justify-center hover:bg-brand-700 active:scale-95 transition-all cursor-pointer">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+        </svg>
+      </button>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // Auto-scroll to bottom on load
+  const msgs = document.getElementById('chat-messages');
+  if (msgs) msgs.scrollTop = msgs.scrollHeight;
+
+  // Show user message immediately before AI responds
+  function addUserMessage(form) {
+    const input = form.querySelector('textarea[name="message"]');
+    const text = input.value.trim();
+    if (!text) return;
+    const bubble = document.createElement('div');
+    bubble.className = 'flex gap-3 fade-in flex-row-reverse';
+    bubble.innerHTML = `<div class="px-4 py-3 max-w-[85%] rounded-2xl text-sm bg-brand-600 text-white rounded-tr-md"><p class="whitespace-pre-wrap">${text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</p></div>`;
+    document.getElementById('chat-messages').appendChild(bubble);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+</script>
+{% endblock %}

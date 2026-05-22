@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}Resume AI — ATS Resume Optimizer{% endblock %}
+
+{% block content %}
+<div class="relative overflow-hidden bg-mesh bg-grid min-h-[calc(100vh-4rem)]">
+  <!-- Floating Orbs -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 relative z-10">
+    <div class="text-center">
+
+      <!-- Status Badge -->
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-50/80 dark:bg-brand-900/20 border border-brand-200/50 dark:border-brand-700/30 backdrop-blur-sm mb-8 slide-up">
+        <span class="pulse-dot"></span>
+        <span class="text-sm font-medium text-brand-700 dark:text-neon-cyan tracking-wide">AI-Powered Resume Optimization</span>
+      </div>
+
+      <!-- Headline -->
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.1] slide-up slide-up-delay-1">
+        <span class="text-gray-900 dark:text-gray-50">Beat the ATS.</span><br>
+        <span class="text-gradient-animate">Land the interview.</span>
+      </h1>
+
+      <!-- Subheadline -->
+      <p class="mt-6 text-lg sm:text-xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed slide-up slide-up-delay-2">
+        Upload your resume, paste a job description, and get an instant ATS compatibility score
+        with actionable feedback. Then generate a tailored resume that passes automated screening.
+      </p>
+
+      <!-- Steps -->
+      <div class="mt-14 grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto text-left slide-up slide-up-delay-3">
+        <div class="card-glass rounded-2xl p-5 hover-lift">
+          <div class="flex gap-3 items-start">
+            <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500/10 to-cyan-500/10 dark:from-brand-500/20 dark:to-cyan-500/20 flex items-center justify-center border border-brand-200/30 dark:border-brand-700/20">
+              <span class="text-brand-600 dark:text-neon-cyan font-bold text-sm font-mono">01</span>
+            </div>
+            <div>
+              <p class="font-semibold text-gray-800 dark:text-gray-100 text-sm">Upload Resume</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">PDF or DOCX format</p>
+            </div>
+          </div>
+        </div>
+        <div class="card-glass rounded-2xl p-5 hover-lift">
+          <div class="flex gap-3 items-start">
+            <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 dark:from-purple-500/20 dark:to-pink-500/20 flex items-center justify-center border border-purple-200/30 dark:border-purple-700/20">
+              <span class="text-purple-600 dark:text-neon-purple font-bold text-sm font-mono">02</span>
+            </div>
+            <div>
+              <p class="font-semibold text-gray-800 dark:text-gray-100 text-sm">Paste Job Description</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Get instant ATS score</p>
+            </div>
+          </div>
+        </div>
+        <div class="card-glass rounded-2xl p-5 hover-lift">
+          <div class="flex gap-3 items-start">
+            <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-gradient-to-br from-green-500/10 to-emerald-500/10 dark:from-green-500/20 dark:to-emerald-500/20 flex items-center justify-center border border-green-200/30 dark:border-green-700/20">
+              <span class="text-green-600 dark:text-neon-green font-bold text-sm font-mono">03</span>
+            </div>
+            <div>
+              <p class="font-semibold text-gray-800 dark:text-gray-100 text-sm">Generate & Download</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Tailored DOCX resume</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="mt-14 slide-up slide-up-delay-4">
+        <button
+          hx-post="/session/create"
+          hx-push-url="true"
+          hx-target="body"
+          hx-swap="innerHTML"
+          class="btn-futuristic btn-glow inline-flex items-center gap-2.5 px-10 py-4 text-base font-semibold rounded-2xl cursor-pointer"
+        >
+          <span>Get Started</span>
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+          </svg>
+        </button>
+        <p class="mt-4 text-xs text-gray-400 dark:text-gray-500">No sign-up required &middot; Free to use</p>
+      </div>
+
+      <!-- Tech Stack Indicator -->
+      <div class="mt-20 flex items-center justify-center gap-6 text-gray-400 dark:text-gray-600 slide-up slide-up-delay-4">
+        <div class="flex items-center gap-1.5 text-xs font-medium">
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          Multi-Agent AI
+        </div>
+        <div class="w-px h-3 bg-gray-300 dark:bg-gray-700"></div>
+        <div class="flex items-center gap-1.5 text-xs font-medium">
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+          6-Layer ATS Scoring
+        </div>
+        <div class="w-px h-3 bg-gray-300 dark:bg-gray-700"></div>
+        <div class="flex items-center gap-1.5 text-xs font-medium">
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+          DOCX Export
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
